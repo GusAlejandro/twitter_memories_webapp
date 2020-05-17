@@ -1,0 +1,12 @@
+.midContent {
+    padding-top: 10%;
+    margin-left: 10%;
+    margin-right: 10%;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .customJumbotron {
+    text-align: center;
+  }
+  
