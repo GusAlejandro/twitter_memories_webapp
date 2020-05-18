@@ -10,3 +10,9 @@
     text-align: center;
   }
   
+  .buttonRow {
+    display: flex !important;
+    justify-content: center !important;
+  }
+
+  
