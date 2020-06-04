@@ -1,9 +1,10 @@
 import React from 'react';
 import './Welcome.css';
-import { Jumbotron, Button, Container, Row } from 'react-bootstrap';
+import { Jumbotron, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 class Welcome extends React.Component {
+
     render () {
         return (
             <div className='midContent'>

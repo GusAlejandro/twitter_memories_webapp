@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Switch, Route, Redirect} from 'react-router-do
 
 function App() {
   return (
+    
     <Router>
       <Navigation />
       <Switch>
