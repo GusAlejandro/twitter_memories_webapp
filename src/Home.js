@@ -31,7 +31,7 @@ class Home extends React.Component {
         };
 
         axios.get(
-            'http://127.0.0.1:5000/feed', 
+            'http://10.0.0.106:5000/feed', 
             http_headers 
         ).then( (response) => {
             this.setState({ file_status: response.data['file_status'] });
@@ -44,6 +44,7 @@ class Home extends React.Component {
 
         const isLoggedIn = this.state.isLoggedIn;
         const file_status = this.state.file_status;
+        console.log(file_status)
 
         return (
             <div className="parent">

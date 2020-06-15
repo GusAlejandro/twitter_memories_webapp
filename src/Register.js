@@ -15,7 +15,8 @@ class Register extends React.Component {
             'password' : '',
             'isSubmitting' : false, 
             'showSuccess': false,
-            'showError': false
+            'showError': false, 
+            'errorMessage': ''
         };
 
 
@@ -32,7 +33,8 @@ class Register extends React.Component {
 
     dismissErrorAlert () {
         this.setState({
-            'showError': false
+            'showError': false,
+            'errorMessage': ''
         })
     }
 
@@ -70,10 +72,10 @@ class Register extends React.Component {
         let username = this.state['username'];
         let password = this.state['password'];
         axios.post(
-            'http://127.0.0.1:5000/register',
+            'http://10.0.0.106:5000/register',
             {'username': username, 'password': password},
         ).then( (response) => {
-            console.log(response.data['username'])
+            console.log(response.data)
             this.setState({
                 'isSubmitting': false
             })
@@ -84,13 +86,23 @@ class Register extends React.Component {
                     'password': '',
                     'showSuccess': true
                 })
-            } else if (response.data['Error']) {
-                this.setState({
-                    'showError': true
-                })
             }
         }
-        )
+        ).catch((error) => {
+            // do something here 
+            if (error.response) {
+                this.setState({
+                    'showError': true,
+                    'errorMessage': error.response.data['Error']
+                })
+            } else if (!error.response) {
+                this.setState({
+                    'showError': true,
+                    'errorMessage': 'Server error. Try again.'
+                })
+            }
+            // adding more cases here, not final
+        }) 
         event.preventDefault();
     }
 
@@ -99,7 +111,6 @@ class Register extends React.Component {
         
         const successAlertStyle = this.state['showSuccess'] ? {} : { display : 'none'};
         const errorAlertStyle = this.state['showError'] ? {} : { display: 'none'};
-
         
         return (
             <div className='register'>
@@ -111,7 +122,7 @@ class Register extends React.Component {
                         to Login.
                     </Alert>
                 
-                    <Alert variant='danger' dismissible='true' onClose={this.dismissErrorAlert} style={errorAlertStyle}>That Username is already taken, please pick another one.</Alert>
+        <Alert variant='danger' dismissible='true' onClose={this.dismissErrorAlert} style={errorAlertStyle}>{this.state['errorMessage']}</Alert>
                 </div>
 
                 <Form onSubmit={this.registerUser}>
