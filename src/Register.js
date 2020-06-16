@@ -11,12 +11,12 @@ class Register extends React.Component {
         super(props);
 
         this.state = {
-            'username' : '',
-            'password' : '',
-            'isSubmitting' : false, 
-            'showSuccess': false,
-            'showError': false, 
-            'errorMessage': ''
+            username : '',
+            password : '',
+            isSubmitting : false, 
+            showSuccess: false,
+            showError: false, 
+            errorMessage: ''
         };
 
 
@@ -33,28 +33,28 @@ class Register extends React.Component {
 
     dismissErrorAlert () {
         this.setState({
-            'showError': false,
-            'errorMessage': ''
+            showError: false,
+            errorMessage: ''
         })
     }
 
     handleUsername() {
         const value = this.usernameRef.current.value;
         this.setState({
-            'username': value
+            username: value
         }, () => this.logFields())
     }
 
     handlePassword(){
         const value = this.passwordRef.current.value;
         this.setState({
-            'password': value
+            password: value
         }, () => this.logFields())
     }
 
     dismissSuccessAlert() {
         this.setState({
-            'showSuccess': false
+            showSuccess: false
         })
     }
 
@@ -65,26 +65,26 @@ class Register extends React.Component {
 
     registerUser(event) {
         this.setState({
-            'isSubmitting': true,
-            'showError': false,
-            'showSuccess': false
+            isSubmitting: true,
+            showError: false,
+            showSuccess: false
         })
-        let username = this.state['username'];
-        let password = this.state['password'];
+        let username = this.state.username;
+        let password = this.state.password;
         axios.post(
             'http://10.0.0.106:5000/register',
             {'username': username, 'password': password},
         ).then( (response) => {
             console.log(response.data)
             this.setState({
-                'isSubmitting': false
+                isSubmitting: false
             })
             if (response.data['username']) {
                 // successful singup
                 this.setState({
-                    'username': '',
-                    'password': '',
-                    'showSuccess': true
+                    username: '',
+                    password: '',
+                    showSuccess: true
                 })
             }
         }
@@ -92,16 +92,16 @@ class Register extends React.Component {
             // do something here 
             if (error.response) {
                 this.setState({
-                    'showError': true,
-                    'errorMessage': error.response.data['Error']
+                    showError: true,
+                    errorMessage: error.response.data['Error']
                 })
-            } else if (!error.response) {
+            } else if (!error.response || error.request) {
                 this.setState({
-                    'showError': true,
-                    'errorMessage': 'Server error. Try again.'
+                    showError: true,
+                    errorMessage: 'Server or connection error. Try again.'
                 })
             }
-            // adding more cases here, not final
+
         }) 
         event.preventDefault();
     }
@@ -109,8 +109,8 @@ class Register extends React.Component {
 
     render () {
         
-        const successAlertStyle = this.state['showSuccess'] ? {} : { display : 'none'};
-        const errorAlertStyle = this.state['showError'] ? {} : { display: 'none'};
+        const successAlertStyle = this.state.showSuccess ? {} : { display : 'none'};
+        const errorAlertStyle = this.state.showError ? {} : { display: 'none'};
         
         return (
             <div className='register'>
@@ -122,18 +122,18 @@ class Register extends React.Component {
                         to Login.
                     </Alert>
                 
-        <Alert variant='danger' dismissible='true' onClose={this.dismissErrorAlert} style={errorAlertStyle}>{this.state['errorMessage']}</Alert>
+                    <Alert variant='danger' dismissible='true' onClose={this.dismissErrorAlert} style={errorAlertStyle}>{this.state.errorMessage}</Alert>
                 </div>
 
                 <Form onSubmit={this.registerUser}>
                     <Form.Group controlId="formUsername">
                         <Form.Label>Username</Form.Label>
-                        <Form.Control ref={this.usernameRef} name='username' type="username" placeholder="" onChange={this.handleUsername} value={this.state['username']}/>
+                        <Form.Control ref={this.usernameRef} name='username' type="username" placeholder="" onChange={this.handleUsername} value={this.state.username}/>
                     </Form.Group>
 
                     <Form.Group controlId="formBasicPassword">
                         <Form.Label>Password</Form.Label>
-                        <Form.Control ref={this.passwordRef} name='password' type="password" placeholder="" onChange={this.handlePassword} value={this.state['password']}/>
+                        <Form.Control ref={this.passwordRef} name='password' type="password" placeholder="" onChange={this.handlePassword} value={this.state.password}/>
                     </Form.Group>
 
                     
@@ -143,7 +143,7 @@ class Register extends React.Component {
                     </Form.Text>
 
                     
-                    <Button variant="primary" type="submit" ref={this.buttonRef} disabled={this.state['isSubmitting']}>
+                    <Button variant="primary" type="submit" ref={this.buttonRef} disabled={this.state.isSubmitting}>
                         Submit
                     </Button>
                 </Form>

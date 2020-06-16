@@ -14,7 +14,8 @@ class Login extends React.Component {
             username : '',
             password : '',
             isSubmitting: false,
-            showError: false
+            showError: false,
+            errorMessage: ''
         };
     
         this.usernameRef = React.createRef();
@@ -46,9 +47,7 @@ class Login extends React.Component {
             {'username': username, 'password': password}
         ).then( (response) => {
             this.setState({ isSubmitting : false })
-            if (response.data['Error']) {
-                this.setState({ showError: true })
-            } else if (response.data['access_token']) {
+            if (response.data['access_token']) {
                 // successful login 
                 // store tokens in local storage 
                 localStorage.setItem('access-token', response.data['access_token']);
@@ -56,13 +55,28 @@ class Login extends React.Component {
                 this.props.history.push('/');
                 // route to '/'
             }
+        }).catch((error) => {
+            if (error.response) {
+                this.setState({
+                    showError: true,
+                    errorMessage: error.response.data['Error']
+                })
+            } else if (!error.response || error.request) {
+                this.setState({
+                    showError: true,
+                    errorMessage: 'Server or connection error. Try again.'
+                })
+            }    
         })
+
+
         event.preventDefault();
     }
 
     dismissErrorAlert () {
         this.setState({
-            showError: false
+            showError: false,
+            errorMessage: ''
         })
     }
 
@@ -89,7 +103,7 @@ class Login extends React.Component {
             <div className='register'>
                 <h1 style={{ textAlign: 'center'}}>Login</h1>
                 
-                <Alert variant='danger' style={errorAlertStyle} onClose={this.dismissErrorAlert} dismissible='true'>Username and password combination is incorrect.</Alert>
+        <Alert variant='danger' style={errorAlertStyle} onClose={this.dismissErrorAlert} dismissible='true'>{this.state.errorMessage}</Alert>
                 
                 
                 <Form onSubmit={this.loginUser}> 
