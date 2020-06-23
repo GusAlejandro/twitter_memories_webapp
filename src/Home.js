@@ -14,25 +14,52 @@ class Home extends React.Component {
         super(props);
 
         const tokens_exist = localStorage.getItem('access-token') && localStorage.getItem('refresh-token');
- 
+        
+        this.getCurrentDate = this.getCurrentDate.bind(this);
+
         this.state = {
             isLoggedIn : tokens_exist,
             file_status : null
         }
     }
 
+    getCurrentDate () {
+        let curr_date = new Date();
+        let months = [
+            'Jan', 
+            'Feb', 
+            'Mar', 
+            'Apr', 
+            'May', 
+            'Jun', 
+            'Jul', 
+            'Aug',
+            'Sep',
+            'Oct',
+            'Nov',
+            'Dec'
+        ]
+        return [
+            months[curr_date.getMonth()], 
+            curr_date.getDate()
+        ]
+    }
+
     componentDidMount () {
         // call the endpoint to get file status and use it to conditionally render components
         const isLoggedIn = this.state.isLoggedIn;
-        const http_headers = {
-            headers : {
-                'authorization': `Bearer ${localStorage.getItem('access-token')}`
+        const config = {
+            params: {
+                "month": this.getCurrentDate()[0], "date": this.getCurrentDate()[1]    
+            },
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('access-token')}`,
+                'Content-Type': 'application/json'
             }
-        };
-
+        }
         axios.get(
-            'http://10.0.0.106:5000/feed', 
-            http_headers 
+            process.env.REACT_APP_URL + '/feed',
+            config
         ).then( (response) => {
             this.setState({ file_status: response.data['file_status'] });
             console.log(this.state.file_status);

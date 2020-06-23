@@ -72,7 +72,7 @@ class Register extends React.Component {
         let username = this.state.username;
         let password = this.state.password;
         axios.post(
-            'http://10.0.0.106:5000/register',
+            process.env.REACT_APP_URL + '/register',
             {'username': username, 'password': password},
         ).then( (response) => {
             console.log(response.data)

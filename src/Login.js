@@ -43,7 +43,7 @@ class Login extends React.Component {
         let password = this.state.password;
 
         axios.post(
-            'http://10.0.0.106:5000/login',
+            process.env.REACT_APP_URL+'/login',
             {'username': username, 'password': password}
         ).then( (response) => {
             this.setState({ isSubmitting : false })

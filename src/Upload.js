@@ -23,7 +23,7 @@ class Upload extends React.Component {
         const file = this.fileRef.files[0];
         formData.append('file', file)
         axios.post(
-            'http://10.0.0.106:5000/upload', formData,
+            process.env.REACT_APP_URL + '/upload', formData,
             { headers: {
                 'Content-Type': 'multipart/form-data'
             }}
