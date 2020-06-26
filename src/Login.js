@@ -56,6 +56,7 @@ class Login extends React.Component {
                 // route to '/'
             }
         }).catch((error) => {
+            this.setState({ isSubmitting : false })
             if (error.response) {
                 this.setState({
                     showError: true,

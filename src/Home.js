@@ -19,7 +19,8 @@ class Home extends React.Component {
 
         this.state = {
             isLoggedIn : tokens_exist,
-            file_status : null
+            file_status : null,
+            tweets: []
         }
     }
 
@@ -63,6 +64,7 @@ class Home extends React.Component {
         ).then( (response) => {
             this.setState({ file_status: response.data['file_status'] });
             console.log(this.state.file_status);
+            this.setState({ tweets: response.data['tweets']})
         })
     }
 
@@ -75,7 +77,7 @@ class Home extends React.Component {
 
         return (
             <div className="parent">
-                {isLoggedIn ? file_status == 0 ? <Upload/> : <Feed/> : <Welcome/>}
+                {isLoggedIn ? file_status == 0 ? <Upload/> : <Feed tweets={this.state.tweets}/> : <Welcome/>}
             </div>
         );
     }

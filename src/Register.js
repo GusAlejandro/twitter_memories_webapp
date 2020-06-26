@@ -90,6 +90,9 @@ class Register extends React.Component {
         }
         ).catch((error) => {
             // do something here 
+            this.setState({
+                isSubmitting: false
+            })
             if (error.response) {
                 this.setState({
                     showError: true,
