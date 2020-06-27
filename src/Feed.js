@@ -19,7 +19,7 @@ class Feed extends React.Component {
         })
 
         return (
-        <ul>{formatted_tweets}</ul>
+            <ul>{formatted_tweets}</ul>
         )
     };
 }

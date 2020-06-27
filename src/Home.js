@@ -4,6 +4,7 @@ import Welcome from './Welcome';
 import Upload from './Upload'
 import Feed from './Feed'
 import axios from 'axios';
+import Navigation from './Navigation';
 
 // TODO: Implement File upload component 
 // feed if file status is 2, file upload if 1, welcome if isLoggedIn is false
@@ -76,8 +77,11 @@ class Home extends React.Component {
         console.log(file_status)
 
         return (
-            <div className="parent">
-                {isLoggedIn ? file_status == 0 ? <Upload/> : <Feed tweets={this.state.tweets}/> : <Welcome/>}
+            <div>
+                <Navigation display={true}/>
+                <div className="parent">
+                    {isLoggedIn ? file_status == 0 ? <Upload/> : <Feed tweets={this.state.tweets}/> : <Welcome/>}
+                </div>
             </div>
         );
     }

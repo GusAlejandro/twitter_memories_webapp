@@ -3,6 +3,7 @@ import './Register.css';
 import { Form, Button, Alert } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import Navigation from './Navigation';
 
 
 class Register extends React.Component {
@@ -116,41 +117,44 @@ class Register extends React.Component {
         const errorAlertStyle = this.state.showError ? {} : { display: 'none'};
         
         return (
-            <div className='register'>
-                <h1 style={{ textAlign: 'center'}}>Sign up for Twitter Memories</h1>
+            <div>
+                <Navigation display={false}/>
+                <div className='register'>
+                    <h1 style={{ textAlign: 'center'}}>Sign up for Twitter Memories</h1>
 
-                <div className='successAlert'>
-                    <Alert variant='success' dismissible='true' onClose={this.dismissSuccessAlert} style={successAlertStyle}>Your account has been successfully created. Click
-                        <Link to='/login'> here </Link>
-                        to Login.
-                    </Alert>
-                
-                    <Alert variant='danger' dismissible='true' onClose={this.dismissErrorAlert} style={errorAlertStyle}>{this.state.errorMessage}</Alert>
+                    <div className='successAlert'>
+                        <Alert variant='success' dismissible='true' onClose={this.dismissSuccessAlert} style={successAlertStyle}>Your account has been successfully created. Click
+                            <Link to='/login'> here </Link>
+                            to Login.
+                        </Alert>
+                    
+                        <Alert variant='danger' dismissible='true' onClose={this.dismissErrorAlert} style={errorAlertStyle}>{this.state.errorMessage}</Alert>
+                    </div>
+
+                    <Form onSubmit={this.registerUser}>
+                        <Form.Group controlId="formUsername">
+                            <Form.Label>Username</Form.Label>
+                            <Form.Control ref={this.usernameRef} name='username' type="username" placeholder="" onChange={this.handleUsername} value={this.state.username}/>
+                        </Form.Group>
+
+                        <Form.Group controlId="formBasicPassword">
+                            <Form.Label>Password</Form.Label>
+                            <Form.Control ref={this.passwordRef} name='password' type="password" placeholder="" onChange={this.handlePassword} value={this.state.password}/>
+                        </Form.Group>
+
+                        
+                        
+                        <Form.Text className="text-muted" style={{marginBottom: '1%'}}>
+                            Already have an account ? Login <Link to='/login'>here.</Link>
+                        </Form.Text>
+
+                        
+                        <Button variant="primary" type="submit" ref={this.buttonRef} disabled={this.state.isSubmitting}>
+                            Submit
+                        </Button>
+                    </Form>
+
                 </div>
-
-                <Form onSubmit={this.registerUser}>
-                    <Form.Group controlId="formUsername">
-                        <Form.Label>Username</Form.Label>
-                        <Form.Control ref={this.usernameRef} name='username' type="username" placeholder="" onChange={this.handleUsername} value={this.state.username}/>
-                    </Form.Group>
-
-                    <Form.Group controlId="formBasicPassword">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control ref={this.passwordRef} name='password' type="password" placeholder="" onChange={this.handlePassword} value={this.state.password}/>
-                    </Form.Group>
-
-                    
-                    
-                    <Form.Text className="text-muted" style={{marginBottom: '1%'}}>
-                        Already have an account ? Login <Link to='/login'>here.</Link>
-                    </Form.Text>
-
-                    
-                    <Button variant="primary" type="submit" ref={this.buttonRef} disabled={this.state.isSubmitting}>
-                        Submit
-                    </Button>
-                </Form>
-
             </div>
         );
     }
