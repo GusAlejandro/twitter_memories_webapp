@@ -126,7 +126,7 @@ class Login extends React.Component {
                         </Form.Text>
 
                         
-                        <Button variant="primary" type="submit" ref={this.buttonRef} disabled={this.isSubmitting}>
+                        <Button variant="primary" type="submit" ref={this.buttonRef} disabled={this.state.isSubmitting}>
                             Submit
                         </Button>
                     </Form>

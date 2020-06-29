@@ -16,7 +16,9 @@ class Home extends React.Component {
 
         const tokens_exist = localStorage.getItem('access-token') && localStorage.getItem('refresh-token');
         
+        this.getFeed = this.getFeed.bind(this);
         this.getCurrentDate = this.getCurrentDate.bind(this);
+        this.rerenderParentCallback = this.rerenderParentCallback.bind(this);
 
         this.state = {
             isLoggedIn : tokens_exist,
@@ -47,12 +49,17 @@ class Home extends React.Component {
         ]
     }
 
-    componentDidMount () {
-        // call the endpoint to get file status and use it to conditionally render components
-        const isLoggedIn = this.state.isLoggedIn;
+    rerenderParentCallback () {
+        // we can either call set state or do forceUpdate
+        console.log('1234556667656');
+        this.forceUpdate();
+    }
+
+
+    getFeed () {
         const config = {
             params: {
-                "month": this.getCurrentDate()[0], "date": this.getCurrentDate()[1]    
+                "month": this.getCurrentDate()[0], "date": this.getCurrentDate()[1]
             },
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('access-token')}`,
@@ -63,13 +70,42 @@ class Home extends React.Component {
             process.env.REACT_APP_URL + '/feed',
             config
         ).then( (response) => {
-            this.setState({ file_status: response.data['file_status'] });
-            console.log(this.state.file_status);
-            this.setState({ tweets: response.data['tweets']})
+            // without this logic, it will trigger an infinite loop bc it will set state and trigger component did update
+            if (response.data['file_status'] != this.state.file_status){
+                this.setState({ file_status: response.data['file_status'], tweets: response.data['tweets'] });
+            }
+            console.log('the file status is: ' +  this.state.file_status.toString());
         })
     }
 
 
+    componentDidUpdate () {
+        // here we need to replicate logic of component did mount 
+        this.getFeed();
+    }
+
+    componentDidMount () {
+        // call the endpoint to get file status and use it to conditionally render components
+        this.getFeed();
+        // const config = {
+        //     params: {
+        //         "month": this.getCurrentDate()[0], "date": this.getCurrentDate()[1]    
+        //     },
+        //     headers: {
+        //         'Authorization': `Bearer ${localStorage.getItem('access-token')}`,
+        //         'Content-Type': 'application/json'
+        //     }
+        // }
+        // axios.get(
+        //     process.env.REACT_APP_URL + '/feed',
+        //     config
+        // ).then( (response) => {
+        //     this.setState({ file_status: response.data['file_status'], tweets: response.data['tweets'] });
+        //     console.log('the file status is: ' +  this.state.file_status.toString());
+        // })
+    }
+
+    
     render () {
 
         const isLoggedIn = this.state.isLoggedIn;
@@ -80,7 +116,7 @@ class Home extends React.Component {
             <div>
                 <Navigation display={true}/>
                 <div className="parent">
-                    {isLoggedIn ? file_status == 0 ? <Upload/> : <Feed tweets={this.state.tweets}/> : <Welcome/>}
+                    {isLoggedIn ? file_status == 0 ? <Upload parentCallback={this.rerenderParentCallback}/> : <Feed file_status={this.state.file_status} tweets={this.state.tweets}/> : <Welcome/>}
                 </div>
             </div>
         );

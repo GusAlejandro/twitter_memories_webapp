@@ -1,6 +1,6 @@
 import React from 'react';
 import './Upload.css';
-import { Form, Alert, Button } from 'react-bootstrap';
+import { Form, Alert, Button, Jumbotron, Spinner } from 'react-bootstrap';
 import axios from 'axios';
 
 class Upload extends React.Component {
@@ -36,10 +36,11 @@ class Upload extends React.Component {
                 'Authorization': `Bearer ${localStorage.getItem('access-token')}`
             }}
         ).then((response) => {
-            // add in logic for succesful upload and errors
             this.setState({
                 isSubmitting: false
             })
+            // refresh the page
+            this.props.parentCallback();
         }).catch((error) => {
             this.setState({
                 isSubmitting: false 
@@ -67,28 +68,45 @@ class Upload extends React.Component {
 
         const formStyle = !this.state.fileUploaded ? {} : {display: 'none'};
 
+        const buttonText = this.state.isSubmitting ? 'Uploading..' : 'Upload';
+
+        const spinnerStyle = this.state.isSubmitting ? {} : {display : 'none'};
+
         return (
             <div>
-                <div id='fileForm' style={formStyle}>
-                    <h1>Please Upload File</h1>
-                    <Form onSubmit={this.uploadFile}>
-                        <Form.Group>
-                            <Form.File id="formControlFile" label="Twitter Archive File" ref={this.fileRef} onChange={this.handleFile}/>
-                        </Form.Group>
-                    
-                        <Button variant="primary" type="submit" ref={this.buttonRef} disabled={this.isSubmitting}>
-                            Upload
-                        </Button>
-                    </Form>
-                </div>
-        
-                <div id="fileUploaded" style={fileSucessStyle}>
-                    <h1>Your file is currently being processed, please come back later to see your tweets.</h1>
-                </div>
+                <Jumbotron className='customJumbotron'>
+                    <div id='fileForm' style={formStyle}>
+                        <h1>Upload Your Twitter Archive</h1>
+                        <p>Setting up your Twitter Memories Account is very easy ! Just follow these 3 steps below:</p>
+                        <ol>
+                            <li>Download your Twitter Archive using this guide <a target="_blank" href='https://help.twitter.com/en/managing-your-account/how-to-download-your-twitter-archive'>here.</a></li>
+                            <li>Find the file "tweet.js" within the "data" folder of your Twitter Archive.</li>
+                            <li>Upload the tweet.js file onto Twitter Memories below so we can process your tweets !</li>
+                        </ol>
+                        <Form onSubmit={this.uploadFile}>
+                            <Form.Group className="uploadButton"    >
+                                <Form.File id="formControlFile" ref={this.fileRef} onChange={this.handleFile}/>
+                            </Form.Group>
+                        
+                            <Button variant="primary" type="submit" ref={this.buttonRef} disabled={this.state.isSubmitting}>
+                                {buttonText}
+                                <Spinner style={spinnerStyle}
+                                    as='span'
+                                    animation='border' 
+                                >
+                                </Spinner>
+                            </Button>
+                        </Form>
+                    </div>
+            
+                    <div id="fileUploaded" style={fileSucessStyle}>
+                        <h1>Your file is currently being processed, please come back later to see your tweets.</h1>
+                    </div>
 
-                <div id="errorOccured" style={fileErrorStyle}>
-                    <Alert variant='danger' dismissible='true' onClose={this.dismissErrorAlert}>An error occured during file upload, try again.</Alert>
-                </div>
+                    <div id="errorOccured" style={fileErrorStyle}>
+                        <Alert variant='danger' dismissible='true' onClose={this.dismissErrorAlert}>An error occured during file upload, try again.</Alert>
+                    </div>
+                </Jumbotron>
             </div>
         );
     }
