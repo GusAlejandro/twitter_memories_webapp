@@ -87,22 +87,6 @@ class Home extends React.Component {
     componentDidMount () {
         // call the endpoint to get file status and use it to conditionally render components
         this.getFeed();
-        // const config = {
-        //     params: {
-        //         "month": this.getCurrentDate()[0], "date": this.getCurrentDate()[1]    
-        //     },
-        //     headers: {
-        //         'Authorization': `Bearer ${localStorage.getItem('access-token')}`,
-        //         'Content-Type': 'application/json'
-        //     }
-        // }
-        // axios.get(
-        //     process.env.REACT_APP_URL + '/feed',
-        //     config
-        // ).then( (response) => {
-        //     this.setState({ file_status: response.data['file_status'], tweets: response.data['tweets'] });
-        //     console.log('the file status is: ' +  this.state.file_status.toString());
-        // })
     }
 
     

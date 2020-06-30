@@ -17,14 +17,17 @@ class Upload extends React.Component {
         this.state = {
             fileUploaded : false,
             errorOccured : false,
-            isSubmitting: false
+            isSubmitting: false, 
+            errorMessage: ''
         }
     };
 
     uploadFile (event) {
         console.log("the uplaod button was clicked")
         this.setState({
-            isSubmitting: true
+            isSubmitting: true,
+            errorOccured: false,
+            errorMessage: ''
         })
         let formData = new FormData();
         const file = this.fileRef.current.files[0];
@@ -43,7 +46,9 @@ class Upload extends React.Component {
             this.props.parentCallback();
         }).catch((error) => {
             this.setState({
-                isSubmitting: false 
+                isSubmitting: false,
+                errorOccured: true,
+                errorMessage: error.response.data['Error']
             })
         })
 
@@ -52,7 +57,8 @@ class Upload extends React.Component {
 
     dismissErrorAlert (){
         this.setState({
-            errorOccured: false
+            errorOccured: false,
+            errorMessage: ''
         })
     }
 
@@ -104,7 +110,7 @@ class Upload extends React.Component {
                     </div>
 
                     <div id="errorOccured" style={fileErrorStyle}>
-                        <Alert variant='danger' dismissible='true' onClose={this.dismissErrorAlert}>An error occured during file upload, try again.</Alert>
+                        <Alert variant='danger' dismissible='true' onClose={this.dismissErrorAlert}>{this.state.errorMessage}</Alert>
                     </div>
                 </Jumbotron>
             </div>
