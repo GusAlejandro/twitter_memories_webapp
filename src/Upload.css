@@ -1,11 +1,13 @@
-  
-  .customJumbotron {
+.customJumbotron {
     text-align: center;
-  }
-  
-  .buttonRow {
+}
+
+li {
+    text-align: left;
+}
+
+.uploadButton {
     display: flex !important;
     justify-content: center !important;
-  }
+}
 
-  

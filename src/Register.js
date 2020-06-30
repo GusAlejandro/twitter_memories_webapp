@@ -3,6 +3,7 @@ import './Register.css';
 import { Form, Button, Alert } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import Navigation from './Navigation';
 
 
 class Register extends React.Component {
@@ -11,11 +12,12 @@ class Register extends React.Component {
         super(props);
 
         this.state = {
-            'username' : '',
-            'password' : '',
-            'isSubmitting' : false, 
-            'showSuccess': false,
-            'showError': false
+            username : '',
+            password : '',
+            isSubmitting : false, 
+            showSuccess: false,
+            showError: false, 
+            errorMessage: ''
         };
 
 
@@ -32,27 +34,28 @@ class Register extends React.Component {
 
     dismissErrorAlert () {
         this.setState({
-            'showError': false
+            showError: false,
+            errorMessage: ''
         })
     }
 
     handleUsername() {
         const value = this.usernameRef.current.value;
         this.setState({
-            'username': value
+            username: value
         }, () => this.logFields())
     }
 
     handlePassword(){
         const value = this.passwordRef.current.value;
         this.setState({
-            'password': value
+            password: value
         }, () => this.logFields())
     }
 
     dismissSuccessAlert() {
         this.setState({
-            'showSuccess': false
+            showSuccess: false
         })
     }
 
@@ -63,80 +66,95 @@ class Register extends React.Component {
 
     registerUser(event) {
         this.setState({
-            'isSubmitting': true,
-            'showError': false,
-            'showSuccess': false
+            isSubmitting: true,
+            showError: false,
+            showSuccess: false
         })
-        let username = this.state['username'];
-        let password = this.state['password'];
+        let username = this.state.username;
+        let password = this.state.password;
         axios.post(
-            'http://127.0.0.1:5000/register',
+            process.env.REACT_APP_URL + '/register',
             {'username': username, 'password': password},
         ).then( (response) => {
-            console.log(response.data['username'])
+            console.log(response.data)
             this.setState({
-                'isSubmitting': false
+                isSubmitting: false
             })
             if (response.data['username']) {
                 // successful singup
                 this.setState({
-                    'username': '',
-                    'password': '',
-                    'showSuccess': true
-                })
-            } else if (response.data['Error']) {
-                this.setState({
-                    'showError': true
+                    username: '',
+                    password: '',
+                    showSuccess: true
                 })
             }
         }
-        )
+        ).catch((error) => {
+            // do something here 
+            this.setState({
+                isSubmitting: false
+            })
+            if (error.response) {
+                this.setState({
+                    showError: true,
+                    errorMessage: error.response.data['Error']
+                })
+            } else if (!error.response || error.request) {
+                this.setState({
+                    showError: true,
+                    errorMessage: 'Server or connection error. Try again.'
+                })
+            }
+
+        }) 
         event.preventDefault();
     }
 
 
     render () {
         
-        const successAlertStyle = this.state['showSuccess'] ? {} : { display : 'none'};
-        const errorAlertStyle = this.state['showError'] ? {} : { display: 'none'};
-
+        const successAlertStyle = this.state.showSuccess ? {} : { display : 'none'};
+        const errorAlertStyle = this.state.showError ? {} : { display: 'none'};
         
         return (
-            <div className='register'>
-                <h1 style={{ textAlign: 'center'}}>Sign up for Twitter Memories</h1>
+            <div>
+                <Navigation display={false}/>
+                <div className='register'>
+                    <h1 style={{ textAlign: 'center'}}>Sign up for Twitter Memories</h1>
 
-                <div className='successAlert'>
-                    <Alert variant='success' dismissible='true' onClose={this.dismissSuccessAlert} style={successAlertStyle}>Your account has been successfully created. Click
-                        <Link to='/login'> here </Link>
-                        to Login.
-                    </Alert>
-                
-                    <Alert variant='danger' dismissible='true' onClose={this.dismissErrorAlert} style={errorAlertStyle}>That Username is already taken, please pick another one.</Alert>
+                    <div className='successAlert'>
+                        <Alert variant='success' dismissible='true' onClose={this.dismissSuccessAlert} style={successAlertStyle}>Your account has been successfully created. Click
+                            <Link to='/login'> here </Link>
+                            to Login.
+                        </Alert>
+                    
+                        <Alert variant='danger' dismissible='true' onClose={this.dismissErrorAlert} style={errorAlertStyle}>{this.state.errorMessage}</Alert>
+                    </div>
+
+                    <Form onSubmit={this.registerUser}>
+                        <Form.Group controlId="formUsername">
+                            <Form.Label>Username</Form.Label>
+                            <Form.Control ref={this.usernameRef} name='username' type="username" placeholder="" onChange={this.handleUsername} value={this.state.username}/>
+                        </Form.Group>
+
+                        <Form.Group controlId="formBasicPassword">
+                            <Form.Label>Password</Form.Label>
+                            <Form.Control ref={this.passwordRef} name='password' type="password" placeholder="" onChange={this.handlePassword} value={this.state.password}/>
+                        </Form.Group>
+
+                        
+                        
+                        <Form.Text className="text-muted" style={{marginBottom: '1%'}}>
+                            Already have an account ? Login <Link to='/login'>here.</Link>
+                        </Form.Text>
+
+                        
+                        <Button variant="primary" type="submit" ref={this.buttonRef} disabled={this.state.isSubmitting}>
+                            Submit
+                        </Button>
+                    </Form>
+
                 </div>
-
-                <Form onSubmit={this.registerUser}>
-                    <Form.Group controlId="formUsername">
-                        <Form.Label>Username</Form.Label>
-                        <Form.Control ref={this.usernameRef} name='username' type="username" placeholder="" onChange={this.handleUsername} value={this.state['username']}/>
-                    </Form.Group>
-
-                    <Form.Group controlId="formBasicPassword">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control ref={this.passwordRef} name='password' type="password" placeholder="" onChange={this.handlePassword} value={this.state['password']}/>
-                    </Form.Group>
-
-                    
-                    
-                    <Form.Text className="text-muted" style={{marginBottom: '1%'}}>
-                        Already have an account ? Login <Link to='/login'>here.</Link>
-                    </Form.Text>
-
-                    
-                    <Button variant="primary" type="submit" ref={this.buttonRef} disabled={this.state['isSubmitting']}>
-                        Submit
-                    </Button>
-                </Form>
-
             </div>
         );
     }

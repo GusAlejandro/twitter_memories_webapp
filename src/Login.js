@@ -3,6 +3,7 @@ import './Register.css';
 import { Form, Button, Alert } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import Navigation from './Navigation';
 
 
 class Login extends React.Component {
@@ -14,7 +15,8 @@ class Login extends React.Component {
             username : '',
             password : '',
             isSubmitting: false,
-            showError: false
+            showError: false,
+            errorMessage: ''
         };
     
         this.usernameRef = React.createRef();
@@ -42,13 +44,11 @@ class Login extends React.Component {
         let password = this.state.password;
 
         axios.post(
-            'http://127.0.0.1:5000/login',
+            process.env.REACT_APP_URL+'/login',
             {'username': username, 'password': password}
         ).then( (response) => {
             this.setState({ isSubmitting : false })
-            if (response.data['Error']) {
-                this.setState({ showError: true })
-            } else if (response.data['access_token']) {
+            if (response.data['access_token']) {
                 // successful login 
                 // store tokens in local storage 
                 localStorage.setItem('access-token', response.data['access_token']);
@@ -56,13 +56,29 @@ class Login extends React.Component {
                 this.props.history.push('/');
                 // route to '/'
             }
+        }).catch((error) => {
+            this.setState({ isSubmitting : false })
+            if (error.response) {
+                this.setState({
+                    showError: true,
+                    errorMessage: error.response.data['Error']
+                })
+            } else if (!error.response || error.request) {
+                this.setState({
+                    showError: true,
+                    errorMessage: 'Server or connection error. Try again.'
+                })
+            }    
         })
+
+
         event.preventDefault();
     }
 
     dismissErrorAlert () {
         this.setState({
-            showError: false
+            showError: false,
+            errorMessage: ''
         })
     }
 
@@ -86,32 +102,35 @@ class Login extends React.Component {
         const errorAlertStyle = this.state.showError ? {} : { display: 'none'};
 
         return (
-            <div className='register'>
-                <h1 style={{ textAlign: 'center'}}>Login</h1>
-                
-                <Alert variant='danger' style={errorAlertStyle} onClose={this.dismissErrorAlert} dismissible='true'>Username and password combination is incorrect.</Alert>
-                
-                
-                <Form onSubmit={this.loginUser}> 
-                    <Form.Group controlId="formUsername">
-                        <Form.Label>Username</Form.Label>
-                        <Form.Control ref={this.usernameRef} type="username" placeholder="" onChange={this.handleUsername} value={this.state.username}/>
-                    </Form.Group>
-
-                    <Form.Group controlId="formBasicPassword">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control ref={this.passwordRef} type="password" placeholder="" onChange={this.handlePassword} value={this.state.password}/>
-                    </Form.Group>
+            <div>
+                <Navigation display={false}/>
+                <div className='register'>
+                    <h1 style={{ textAlign: 'center'}}>Login</h1>
                     
-                    <Form.Text className="text-muted" style={{marginBottom: '1%'}}>
-                        Don't have an account ? Sign up <Link to='/signup'>here.</Link>
-                    </Form.Text>
-
+                    <Alert variant='danger' style={errorAlertStyle} onClose={this.dismissErrorAlert} dismissible='true'>{this.state.errorMessage}</Alert>
                     
-                    <Button variant="primary" type="submit" ref={this.buttonRef} disabled={this.isSubmitting}>
-                        Submit
-                    </Button>
-                </Form>
+                    
+                    <Form onSubmit={this.loginUser}> 
+                        <Form.Group controlId="formUsername">
+                            <Form.Label>Username</Form.Label>
+                            <Form.Control ref={this.usernameRef} type="username" placeholder="" onChange={this.handleUsername} value={this.state.username}/>
+                        </Form.Group>
+
+                        <Form.Group controlId="formBasicPassword">
+                            <Form.Label>Password</Form.Label>
+                            <Form.Control ref={this.passwordRef} type="password" placeholder="" onChange={this.handlePassword} value={this.state.password}/>
+                        </Form.Group>
+                        
+                        <Form.Text className="text-muted" style={{marginBottom: '1%'}}>
+                            Don't have an account ? Sign up <Link to='/signup'>here.</Link>
+                        </Form.Text>
+
+                        
+                        <Button variant="primary" type="submit" ref={this.buttonRef} disabled={this.state.isSubmitting}>
+                            Submit
+                        </Button>
+                    </Form>
+                </div>
             </div>
         );
     }

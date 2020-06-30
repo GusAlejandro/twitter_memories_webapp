@@ -7,7 +7,7 @@ class Welcome extends React.Component {
 
     render () {
         return (
-            <div className='midContent'>
+            <div>
                 <Jumbotron className='customJumbotron'>
                     <h1>View Your Past Tweets</h1>
                     <p>
