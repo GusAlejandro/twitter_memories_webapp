@@ -1,0 +1,25 @@
+.tweets {
+    /* justify-content: center;
+    display: flex;
+    flex-direction: column;
+  
+    align-items: center; */
+}
+
+.singleTweet {
+    justify-content: center !important;
+}
+
+.feed {
+    display: flex; 
+    flex-direction: column;
+    align-items: center; 
+    text-align: center;  
+}
+
+iframe {
+    width: 100vw !important;
+    min-width: 100% !important;
+    max-width: 90vw !important;
+    margin-left: -40px;
+}

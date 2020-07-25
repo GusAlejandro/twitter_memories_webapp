@@ -6,8 +6,8 @@ import Feed from './Feed'
 import axios from 'axios';
 import Navigation from './Navigation';
 
-// TODO: Implement File upload component 
-// feed if file status is 2, file upload if 1, welcome if isLoggedIn is false
+
+
 
 class Home extends React.Component {
 
@@ -51,7 +51,6 @@ class Home extends React.Component {
 
     rerenderParentCallback () {
         // we can either call set state or do forceUpdate
-        console.log('1234556667656');
         this.forceUpdate();
     }
 
@@ -94,7 +93,7 @@ class Home extends React.Component {
 
         const isLoggedIn = this.state.isLoggedIn;
         const file_status = this.state.file_status;
-        console.log(file_status)
+        
 
         return (
             <div>
