@@ -21,9 +21,9 @@ class Feed extends React.Component {
         return (
             <div className="feed">
                 {file_status == 1 
-                    ? <h1>your tweets are being processed </h1> 
+                    ? <h1>Your Tweets are being processed. Refresh in a couple minutes.</h1> 
                     : <div>
-                        <h1>Tweets Are below</h1>
+                        <h1>Tweets</h1>
                         <ul className="tweets">{formatted_tweets}</ul>
                     </div>
                 }
