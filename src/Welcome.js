@@ -11,7 +11,7 @@ class Welcome extends React.Component {
                 <Jumbotron className='customJumbotron'>
                     <h1>View Your Past Tweets</h1>
                     <p>
-                    <b>Twitter Memories</b> is a third-party app that allows you to view 
+                    <b>Twitter Memories (Beta)</b> is a third-party app that allows you to view 
                     what you tweeted on this day, in the past. In order to use this app you need your Twitter Archive, 
                     which you can request from Twitter 
                     <a target="_blank" rel="noopener noreferrer"  href='https://help.twitter.com/en/managing-your-account/how-to-download-your-twitter-archive'> here</a>. 

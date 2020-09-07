@@ -34,7 +34,7 @@ class Navigation extends React.Component {
       <div>
       <Navbar bg='dark' variant='dark'>
         <Link to='/'>
-          <Navbar.Brand>Twitter Memories</Navbar.Brand>
+          <Navbar.Brand>Twitter Memories (Beta)</Navbar.Brand>
         </Link>
         <Navbar.Collapse className="justify-content-end">
           <div style={logOutStyle}>
