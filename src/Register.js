@@ -61,7 +61,7 @@ class Register extends React.Component {
 
     logFields = () => {
         const { username, password} = this.state;
-        console.log(username + ' ' + password);
+        //console.log(username + ' ' + password);
     }
 
     registerUser(event) {
@@ -76,7 +76,7 @@ class Register extends React.Component {
             process.env.REACT_APP_URL + '/register',
             {'username': username, 'password': password},
         ).then( (response) => {
-            console.log(response.data)
+            //console.log(response.data)
             this.setState({
                 isSubmitting: false
             })

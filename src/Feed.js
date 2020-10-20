@@ -14,6 +14,7 @@ class Feed extends React.Component {
     render () {
         const file_status = this.props.file_status;
         let tweets = this.props.tweets;
+        //console.log(tweets);
         let formatted_tweets = tweets.map(function(tweet){
             return <Tweet className="singleTweet" tweetId={tweet} options={{ theme: "dark"}} />
         })
@@ -22,10 +23,12 @@ class Feed extends React.Component {
             <div className="feed">
                 {file_status == 1 
                     ? <h1>Your Tweets are being processed. Refresh in a couple minutes.</h1> 
-                    : <div>
+                    : [ tweets.length == [] ?
+                     <h1>No tweets :( come back tomorrow</h1> 
+                    :<div>
                         <h1>Tweets</h1>
                         <ul className="tweets">{formatted_tweets}</ul>
-                    </div>
+                     </div> ]
                 }
             </div>
         )
