@@ -23,7 +23,7 @@ class Upload extends React.Component {
     };
 
     uploadFile (event) {
-        console.log("the uplaod button was clicked")
+        //console.log("the uplaod button was clicked")
         this.setState({
             isSubmitting: true,
             errorOccured: false,
@@ -63,7 +63,7 @@ class Upload extends React.Component {
     }
 
     handleFile (event) {
-        console.log(this.fileRef.current.files)
+        //console.log(this.fileRef.current.files)
     }
 
     render () {

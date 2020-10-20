@@ -73,11 +73,11 @@ class Home extends React.Component {
             if (response.data['file_status'] != this.state.file_status){
                 this.setState({ file_status: response.data['file_status'], tweets: response.data['tweets'] });
             }
-            console.log('the file status is: ' +  this.state.file_status.toString());
+            //console.log('the file status is: ' +  this.state.file_status.toString());
         }).catch((error) => {
             if (error.response.data['Error'] == 'Access token has expired') {
                 // this indicates token refresh is required, but for now we will just log the user out 
-                console.log("error 401 was received");
+                //console.log("error 401 was received");
                 if (localStorage.getItem('access-token') && localStorage.getItem('refresh-token')) {
                     localStorage.removeItem('access-token');
                     localStorage.removeItem('refresh-token');
